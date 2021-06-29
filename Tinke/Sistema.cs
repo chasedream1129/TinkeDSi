@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright (C) 2011  pleoNeX
  *
  *   This program is free software: you can redistribute it and/or modify
@@ -1806,20 +1806,10 @@ namespace Tinke
                 espera.Close();
 
             // Obtenemos el nuevo archivo para guardar
-            SaveFileDialog o = new SaveFileDialog();
-            o.AddExtension = true;
-            o.DefaultExt = ".nds";
-            o.Filter = "Nintendo DS ROM (*.nds)|*.nds";
-            o.OverwritePrompt = true;
-            Open_Dialog:
-            if (o.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-            {
-                if (o.FileName == accion.ROMFile)
-                {
-                    MessageBox.Show(Tools.Helper.GetTranslation("Sistema", "S44"));
-                    goto Open_Dialog;
-                }
+            string oFileName = accion.ROMFile.Replace(".nds", "_changed.nds");
 
+            if (oFileName != "")
+            {
                 Thread saverom = new Thread(ThreadEspera)
                 {
                     IsBackground = true
@@ -1827,8 +1817,8 @@ namespace Tinke
                 if (!isMono)
                     saverom.Start("S06");
 
-                Console.WriteLine(Tools.Helper.GetTranslation("Messages", "S0D"), o.FileName);
-                bw = new BinaryWriter(new FileStream(o.FileName, FileMode.Create));
+                Console.WriteLine(Tools.Helper.GetTranslation("Messages", "S0D"), oFileName);
+                bw = new BinaryWriter(new FileStream(oFileName, FileMode.Create));
                 Ekona.Helper.IOutil.Append(ref bw, header_file);
                 Ekona.Helper.IOutil.Append(ref bw, arm9Binary);
                 Ekona.Helper.IOutil.Append(ref bw, arm7Binary);
@@ -1857,7 +1847,7 @@ namespace Tinke
                 bw.Flush();
                 bw.Close();
 
-                Console.WriteLine("<b>" + Tools.Helper.GetTranslation("Messages", "S09") + "</b>", new FileInfo(o.FileName).Length);
+                Console.WriteLine("<b>" + Tools.Helper.GetTranslation("Messages", "S09") + "</b>", new FileInfo(oFileName).Length);
                 accion.IsNewRom = false;
 
                 if (!isMono)
