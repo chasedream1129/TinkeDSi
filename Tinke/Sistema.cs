@@ -2438,24 +2438,10 @@ namespace Tinke
         }
         private void btnImport1_Click(object sender, EventArgs e)
         {
-            FolderBrowserDialog FBD = new FolderBrowserDialog
-            {
-                Description = Tools.Helper.GetTranslation("Sistema", "S47"),
-                ShowNewFolderButton = false
-            };
-            if (FBD.ShowDialog() != DialogResult.OK)
-                return;
-
-            Thread matching = new Thread(ThreadEspera)
-            {
-                IsBackground = true
-            };
-            if (!isMono)
-                matching.Start("S08");
-
-            Console.WriteLine(FBD.SelectedPath);
+            string FBDSelectedPath = accion.ROMFile.Replace(".nds", "\\");
+            Console.WriteLine(FBDSelectedPath);
             List<string> files = new List<string>();
-            files = GetAllSubFiles(FBD.SelectedPath, files);
+            files = GetAllSubFiles(FBDSelectedPath, files);
             foreach (string currFile in files)
             {
                 string nstr;
